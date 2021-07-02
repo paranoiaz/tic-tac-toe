@@ -23,6 +23,26 @@ def clear_screen():
         return os.system("clear")
 
 
+def check_input(player_input):
+    return player_input.isdigit() and re.search("^[1-9]$", player_input)
+
+
+def check_game_state(board):
+    if board.check_full_board():
+        clear_screen()
+        board.print_board()
+        print("\nThe game ended in a draw.")
+        return False
+
+    if board.check_winner() != Token.TOKEN_EMPTY:
+        clear_screen()
+        board.print_board()
+        print(f"\nPlayer {board.check_winner()} has won the game.")
+        return False
+
+    return True
+
+
 def play_vs_player():
     board = Board.get_instance()
     current_player = Token.TOKEN_X
@@ -35,26 +55,15 @@ def play_vs_player():
         print(f"\nIt is {current_player}'s turn, choose a position to place it (1 - 9).\n")
         player_input = input("> ")
 
-        if player_input.isdigit():
-            if re.search("^[1-9]$", player_input):
-                if board.is_position_empty(int(player_input) - 1):
-                    board.place_move(int(player_input) - 1, current_player)
-                    if current_player == Token.TOKEN_X:
-                        current_player = Token.TOKEN_O
-                    else:
-                        current_player = Token.TOKEN_X
+        if check_input(player_input):
+            if board.is_position_empty(int(player_input) - 1):
+                board.place_move(int(player_input) - 1, current_player)
+                if current_player == Token.TOKEN_X:
+                    current_player = Token.TOKEN_O
+                else:
+                    current_player = Token.TOKEN_X
 
-        if board.check_full_board():
-            clear_screen()
-            board.print_board()
-            print("\nThe game ended in a draw.")
-            game_state = False
-
-        if board.check_winner() != Token.TOKEN_EMPTY:
-            clear_screen()
-            board.print_board()
-            print(f"\nPlayer {board.check_winner()} has won the game.")
-            game_state = False
+        game_state = check_game_state(board)
 
 
 def play_vs_bot():
@@ -71,26 +80,15 @@ def play_vs_bot():
             print(f"\nIt is your turn, choose a position to place it (1 - 9).\n")
             player_input = input("> ")
 
-            if player_input.isdigit():
-                if re.search("^[1-9]$", player_input):
-                    if board.is_position_empty(int(player_input) - 1):
-                        board.place_move(int(player_input) - 1, Token.TOKEN_X)
-                        player_turn = False
+            if check_input(player_input):
+                if board.is_position_empty(int(player_input) - 1):
+                    board.place_move(int(player_input) - 1, Token.TOKEN_X)
+                    player_turn = False
         else:
             algorithm.execute_next_move(board)
             player_turn = True
 
-        if board.check_full_board():
-            clear_screen()
-            board.print_board()
-            print("\nThe game ended in a draw.")
-            game_state = False
-
-        if board.check_winner() != Token.TOKEN_EMPTY:
-            clear_screen()
-            board.print_board()
-            print(f"\nPlayer {board.check_winner()} has won the game.")
-            game_state = False
+        game_state = check_game_state(board)
 
 
 def change_settings():
