@@ -1,4 +1,4 @@
-from token import Token
+from assets.token import Token
 
 
 class Board:
