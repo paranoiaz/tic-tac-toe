@@ -1,12 +1,12 @@
 import os
 import re
-
+import yaml
 from assets.algorithm import Algorithm
 from assets.board import Board
 from assets.token import Token
 
 
-bot_difficulty = "EASY"
+config = yaml.safe_load(open("config.yml", "r"))
 
 
 def print_menu():
@@ -59,7 +59,7 @@ def play_vs_player():
 
 def play_vs_bot():
     board = Board.get_instance()
-    algorithm = Algorithm(bot_difficulty)
+    algorithm = Algorithm(config["difficulty"])
     game_state = True
     player_turn = True
 
@@ -77,7 +77,7 @@ def play_vs_bot():
                         board.place_move(int(player_input) - 1, Token.TOKEN_X)
                         player_turn = False
         else:
-            algorithm.next_move(board)
+            algorithm.execute_next_move(board)
             player_turn = True
 
         if board.check_full_board():
@@ -94,20 +94,21 @@ def play_vs_bot():
 
 
 def change_settings():
-    global bot_difficulty
-
     clear_screen()
     print("Choose your difficulty:\n"
           "\n1. EASY\n"
           "2. HARD\n"
-          f"\nCurrent difficulty: {bot_difficulty}\n")
+          f"\nCurrent difficulty: {config['difficulty']}\n")
 
     difficulty_input = input("> ")
 
     if difficulty_input.lower() == "1":
-        bot_difficulty = "EASY"
+        config['difficulty'] = "EASY"
     if difficulty_input.lower() == "2":
-        bot_difficulty = "HARD"
+        config['difficulty'] = "HARD"
+
+    with open("config.yml", "w") as out:
+        yaml.dump(config, out, default_flow_style=False)
 
     main()
 
