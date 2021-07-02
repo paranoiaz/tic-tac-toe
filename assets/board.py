@@ -4,6 +4,7 @@ from token import Token
 class Board:
     __instance = None
 
+    # singleton design pattern implementation
     def __init__(self, board_size: int):
         if Board.__instance != None:
             raise Exception("Board is already instantiated.")
@@ -32,11 +33,7 @@ class Board:
     def is_position_empty(self, position: int) -> bool:
         row: int = position // 3
         column: int = position % 3
-
-        if self.matrix[row][column] == Token.TOKEN_EMPTY:
-            return True
-
-        return False
+        return self.matrix[row][column] == Token.TOKEN_EMPTY
 
     def check_full_board(self) -> bool:
         for array in self.matrix:
