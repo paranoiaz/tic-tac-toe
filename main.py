@@ -1,26 +1,24 @@
 import os
 import re
 import yaml
+
 from assets.algorithm import Algorithm
 from assets.board import Board
 from assets.token import Token
 
 
-config = yaml.safe_load(open("config.yml", "r"))
+CONFIG = yaml.safe_load(open("config.yml", "r"))
 
 
 def print_menu():
-    print("TicTacToe developed by github.com/paranoiaz\n\n"
+    print("Welcome to Tic Tac Toe\n\n"
           "1. Play vs player\n"
           "2. Play vs bot\n"
           "3. Settings\n")
 
 
 def clear_screen():
-    if os.name == "nt":
-        return os.system("cls")
-    else:
-        return os.system("clear")
+    return os.system("cls") if os.name == "nt" else os.system("clear")
 
 
 def check_input(player_input):
@@ -68,7 +66,7 @@ def play_vs_player():
 
 def play_vs_bot():
     board = Board.get_instance()
-    algorithm = Algorithm(config["difficulty"])
+    algorithm = Algorithm(CONFIG["difficulty"] or "EASY")
     game_state = True
     player_turn = True
 
@@ -93,20 +91,20 @@ def play_vs_bot():
 
 def change_settings():
     clear_screen()
-    print("Choose your difficulty:\n"
-          "\n1. EASY\n"
-          "2. HARD\n"
-          f"\nCurrent difficulty: {config['difficulty']}\n")
+    print("Choose your difficulty:\n\n"
+          "1. EASY\n"
+          "2. HARD\n\n"
+          f"Current difficulty: {CONFIG['difficulty'] or 'EASY'}\n")
 
     difficulty_input = input("> ")
 
     if difficulty_input.lower() == "1":
-        config['difficulty'] = "EASY"
+        CONFIG['difficulty'] = "EASY"
     if difficulty_input.lower() == "2":
-        config['difficulty'] = "HARD"
+        CONFIG['difficulty'] = "HARD"
 
     with open("config.yml", "w") as out:
-        yaml.dump(config, out, default_flow_style=False)
+        yaml.dump(CONFIG, out, default_flow_style=False)
 
     main()
 
