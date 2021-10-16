@@ -39,7 +39,6 @@ class Board:
         for array in self.matrix:
             if Token.TOKEN_EMPTY in array:
                 return False
-
         return True
 
     def check_winner(self) -> Token:
