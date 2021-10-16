@@ -1,5 +1,6 @@
 import math
 import random
+
 from assets.board import Board
 from assets.token import Token
 
@@ -27,15 +28,15 @@ class Algorithm:
         best_move = 0
         best_score = -math.inf
 
-        for move in range(0, 9):
-            if board.is_position_empty(move):
-                board.place_move(move, Token.TOKEN_O)
+        for possible_move in range(0, 9):
+            if board.is_position_empty(possible_move):
+                board.place_move(possible_move, Token.TOKEN_O)
                 score = self.run_mini_max(board, False)
-                board.place_move(move, Token.TOKEN_EMPTY)
+                board.place_move(possible_move, Token.TOKEN_EMPTY)
 
                 if score > best_score:
                     best_score = score
-                    best_move = move
+                    best_move = possible_move
 
         board.place_move(best_move, Token.TOKEN_O)
 
